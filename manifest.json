@@ -1,0 +1,14 @@
+{
+  "name": "Auto Posto Paraíso - Calculadora",
+  "short_name": "Posto",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#003366",
+  "theme_color": "#003366",
+  "icons": [
+    { "src": "money-posto.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "money-posto.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "money-posto.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

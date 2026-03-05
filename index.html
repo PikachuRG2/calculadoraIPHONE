@@ -1,0 +1,292 @@
+<!DOCTYPE html> 
+<html lang="pt-BR"> 
+<head> 
+<meta charset="UTF-8"> 
+<title>Posto Paraíso - Calculadora</title> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"> 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#003366">
+<link rel="apple-touch-icon" sizes="180x180" href="money-posto.png">
+<link rel="icon" type="image/png" sizes="192x192" href="money-posto.png">
+<link rel="icon" type="image/png" sizes="512x512" href="money-posto.png">
+<link rel="manifest" href="manifest.json">
+ 
+<style> 
+:root { 
+    --verde: #006b36; 
+    --amarelo: #ffd100; 
+    --cinza: #f1f1f1; 
+    --logo: #eead2d; 
+    --azul-escuro: #003366; 
+} 
+ 
+body { 
+    font-family: Arial, sans-serif; 
+    background: var(--logo); 
+    margin: 0; 
+    padding: 15px; 
+    overflow: hidden; /* Evita rolagem enquanto a tela de abertura está visível */ 
+    -webkit-text-size-adjust: 100%;
+} 
+ 
+/* Splash Screen Styles */ 
+#splash-screen { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: var(--azul-escuro); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 9999; 
+    transition: opacity 0.8s ease, visibility 0.8s; 
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+} 
+ 
+#splash-screen.hidden { 
+    opacity: 0; 
+    visibility: hidden; 
+} 
+ 
+.splash-logo { 
+    width: 180px; 
+    height: 180px; 
+    margin-bottom: 20px; 
+    animation: pulse 2s infinite ease-in-out; 
+} 
+ 
+.splash-text { 
+    color: white; 
+    font-size: 24px; 
+    font-weight: bold; 
+    letter-spacing: 2px; 
+    animation: fadeIn 1.5s ease-out forwards; 
+} 
+ 
+@keyframes pulse { 
+    0% { transform: scale(1); } 
+    50% { transform: scale(1.1); } 
+    100% { transform: scale(1); } 
+} 
+ 
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+} 
+ 
+header { 
+    background: var(--azul-escuro); 
+    color: white; 
+    text-align: center; 
+    padding: 18px; 
+    font-size: 20px; 
+    font-weight: bold; 
+    border-radius: 8px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px; 
+} 
+ 
+.header-logo { 
+    width: 30px; 
+    height: 30px; 
+} 
+ 
+h3 { 
+    color: var(--verde); 
+    margin-top: 20px; 
+} 
+ 
+button { 
+    width: 100%; 
+    padding: 12px; 
+    margin-top: 8px; 
+    font-size: 16px; 
+    border: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    cursor: pointer; 
+} 
+ 
+.selecionado { 
+    border: 3px solid #000; 
+} 
+ 
+.produto { background: var(--amarelo); } 
+.pix { background: var(--verde); color: white; } 
+.debito { background: #1f7bb6; color: white; } 
+.instalar { background: var(--verde); color: #fff; }
+ 
+input { 
+    width: 100%; 
+    padding: 12px; 
+    margin-top: 8px; 
+    font-size: 16px; 
+    border-radius: 8px; 
+    border: 1px solid #111; 
+} 
+ 
+#resultado { 
+    margin-top: 20px; 
+    padding: 15px; 
+    background: var(--cinza); 
+    border-radius: 8px; 
+    text-align: center; 
+    font-size: 18px; 
+    font-weight: bold; 
+} 
+</style> 
+</head> 
+ 
+<body> 
+ 
+<div id="splash-screen"> 
+    <img src="money-posto.png" alt="Money Posto" class="splash-logo" onerror="this.style.display='none'"> 
+    <div class="splash-text">AUTO POSTO PARAÍSO</div> 
+</div> 
+ 
+<header> 
+    <img src="money-posto.png" alt="Money Posto" class="header-logo" onerror="this.style.display='none'"> 
+    <span>⛽ AUTO POSTO PARAÍSO ⛽</span> 
+</header> 
+ 
+<button id="install-btn" class="instalar" style="display:none">Instalar aplicativo</button> 
+ 
+<h3>Produto</h3> 
+<button id="gasolina" class="produto">Gasolina Comum</button> 
+<button id="aditivada" class="produto">Gasolina Aditivada</button> 
+<button id="diesel" class="produto">Diesel Comum</button> 
+<button id="diesel10" class="produto">Diesel S10</button> 
+<button id="alcool" class="produto">Álcool</button> 
+ 
+<h3>Forma de Pagamento</h3> 
+<button id="pix" class="pix">Pix/Dinheiro</button> 
+<button id="debito" class="debito">Débito/Crédito</button> 
+ 
+<h3>Litros</h3> 
+<input type="text" id="litros" placeholder="Digite os litros" inputmode="decimal" autocomplete="off"> 
+ 
+<h3>Valor (R$)</h3> 
+<input type="text" id="valor" placeholder="Digite o valor" inputmode="decimal" autocomplete="off"> 
+ 
+<div id="resultado">Selecione produto e pagamento</div> 
+ 
+<script> 
+let produto = null; 
+let pagamento = null; 
+ 
+const precos = { 
+    gasolina: { pix: 6.59, debito: 6.79 }, 
+    aditivada: { pix: 6.69, debito: 6.89 }, 
+    diesel: { pix: 6.09, debito: 6.19 }, 
+    diesel10: { pix: 6.17, debito: 6.37 }, 
+    alcool: { pix: 5.70, debito: 5.90 } 
+}; 
+ 
+const nomes = { 
+    gasolina: "Gasolina Comum", 
+    aditivada: "Gasolina Aditivada", 
+    diesel: "Diesel Comum", 
+    diesel10: "Diesel S10", 
+    alcool: "Álcool" 
+}; 
+ 
+const litrosInput = document.getElementById("litros"); 
+const valorInput = document.getElementById("valor"); 
+const resultado = document.getElementById("resultado"); 
+const normalize = s => (s || '').replace(',', '.');
+ 
+/* Seleção Produto */ 
+document.querySelectorAll(".produto").forEach(btn => { 
+    btn.addEventListener("click", () => { 
+        document.querySelectorAll(".produto").forEach(b => b.classList.remove("selecionado")); 
+        btn.classList.add("selecionado"); 
+        produto = btn.id; 
+        calcular(); 
+    }); 
+}); 
+ 
+/* Seleção Pagamento */ 
+document.querySelectorAll(".pix, .debito").forEach(btn => { 
+    btn.addEventListener("click", () => { 
+        document.querySelectorAll(".pix, .debito").forEach(b => b.classList.remove("selecionado")); 
+        btn.classList.add("selecionado"); 
+        pagamento = btn.id; 
+        calcular(); 
+    }); 
+}); 
+ 
+/* Calcular automático */ 
+litrosInput.addEventListener("input", () => { 
+    valorInput.value = ""; 
+    calcular(); 
+}); 
+ 
+valorInput.addEventListener("input", () => { 
+    litrosInput.value = ""; 
+    calcular(); 
+}); 
+ 
+function calcular() { 
+    if (!produto || !pagamento) { 
+        resultado.innerHTML = "Selecione produto e pagamento"; 
+        return; 
+    } 
+ 
+    const preco = precos[produto][pagamento]; 
+    const litros = parseFloat(normalize(litrosInput.value)); 
+    const valor = parseFloat(normalize(valorInput.value)); 
+ 
+    if (!isNaN(litros) && litros > 0) { 
+        const total = litros * preco; 
+        resultado.innerHTML = `${nomes[produto]}<br>Total: R$ ${total.toFixed(2)}`; 
+    } 
+    else if (!isNaN(valor) && valor > 0) { 
+        const litrosCalc = valor / preco; 
+        resultado.innerHTML = `${nomes[produto]}<br>Litros: ${litrosCalc.toFixed(2)} L`; 
+    } 
+    else { 
+        resultado.innerHTML = `${nomes[produto]}<br>Preço por litro: R$ ${preco.toFixed(2)}`; 
+    } 
+} 
+ 
+/* Esconder Splash Screen */ 
+window.addEventListener("DOMContentLoaded", () => { 
+    setTimeout(() => { 
+        const splash = document.getElementById("splash-screen"); 
+        splash.classList.add("hidden"); 
+        document.body.style.overflow = "auto"; 
+    }, 2500); // Exibe por 2.5 segundos 
+}); 
+ 
+const installBtn = document.getElementById("install-btn"); 
+let deferredPrompt = null; 
+function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent); } 
+function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true; } 
+function maybeShowInstall() { if (isIOS() && !isStandalone()) { installBtn.style.display = "block"; } } 
+window.addEventListener("load", maybeShowInstall); 
+window.addEventListener("beforeinstallprompt", (e) => { 
+    e.preventDefault(); 
+    deferredPrompt = e; 
+    if (!isStandalone()) installBtn.style.display = "block"; 
+}); 
+installBtn.addEventListener("click", async () => { 
+    if (deferredPrompt) { 
+        await deferredPrompt.prompt(); 
+        deferredPrompt = null; 
+    } else if (isIOS() && !isStandalone()) { 
+        alert("Para instalar, toque em Compartilhar e escolha \"Adicionar à Tela de Início\"."); 
+    } 
+}); 
+window.addEventListener("appinstalled", () => { installBtn.style.display = "none"; }); 
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js"); }
+</script> 
+ 
+</body> 
+</html>
