@@ -269,7 +269,7 @@ const installBtn = document.getElementById("install-btn");
 let deferredPrompt = null; 
 function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent); } 
 function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true; } 
-function maybeShowInstall() { if (isIOS() && !isStandalone()) { installBtn.style.display = "block"; } } 
+function maybeShowInstall() { if (!isStandalone()) { installBtn.style.display = "block"; } } 
 window.addEventListener("load", maybeShowInstall); 
 window.addEventListener("beforeinstallprompt", (e) => { 
     e.preventDefault(); 
@@ -280,8 +280,12 @@ installBtn.addEventListener("click", async () => {
     if (deferredPrompt) { 
         await deferredPrompt.prompt(); 
         deferredPrompt = null; 
-    } else if (isIOS() && !isStandalone()) { 
-        alert("Para instalar, toque em Compartilhar e escolha \"Adicionar à Tela de Início\"."); 
+    } else if (!isStandalone()) { 
+        if (isIOS()) { 
+            alert("Para instalar no iPhone, toque em Compartilhar e escolha \"Adicionar à Tela de Início\"."); 
+        } else { 
+            alert("Se o botão nativo não aparecer, use o menu do navegador e escolha \"Instalar app\" ou \"Adicionar à tela inicial\"."); 
+        } 
     } 
 }); 
 window.addEventListener("appinstalled", () => { installBtn.style.display = "none"; }); 

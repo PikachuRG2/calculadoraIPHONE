@@ -1,5 +1,5 @@
 const CACHE = "posto-app-v1";
-const ASSETS = ["./", "index.html", "money-posto.png", "manifest.json"];
+const ASSETS = ["./", "index.html", "money-posto.png", "manifest.json", "sw.js"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
   self.skipWaiting();
